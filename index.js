@@ -32,6 +32,7 @@ class Sprite {
         this.type = type
         this.color = color
         this.isAttacking
+        this.health = 100
     }
 
     draw() {
@@ -73,7 +74,7 @@ class Sprite {
             this.isAttacking = false
         }, 100)
     }
-} // 50:38
+}
 
 
 
@@ -148,10 +149,14 @@ function animate() {
     if ( player.isAttacking && rectangularCollision({attacker: player, rectangle2: enemy})){
         console.log('go')
         player.isAttacking = false
+        enemy.health -= 20
+        document.querySelector('#enemyHealth').style.width = enemy.health + '%'
     }
     if ( enemy.isAttacking && rectangularCollision({attacker: enemy, rectangle2: player})){
         console.log('og')
         enemy.isAttacking = false
+        player.health -= 20
+        document.querySelector('#playerHealth').style.width = player.health + '%'
     }
 }
 
