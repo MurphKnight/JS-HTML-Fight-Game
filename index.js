@@ -20,6 +20,7 @@ const background = new Sprite({
 const shop = new Sprite({
     position: {x: 600, y: 128},
     scale: 2.75,
+    framesMax: 6,
     imageSrc: './img/shop_anim.png'
 })
 
