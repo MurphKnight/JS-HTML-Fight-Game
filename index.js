@@ -9,6 +9,7 @@ canvas.height = 576
 ct.fillRect(0, 0, canvas.width, canvas.height)
 
 
+
 const gravity = 0.98
 
 const background = new Sprite({
@@ -16,6 +17,11 @@ const background = new Sprite({
     imageSrc: './img/background.png'
 })
 
+const shop = new Sprite({
+    position: {x: 600, y: 128},
+    scale: 2.75,
+    imageSrc: './img/shop_anim.png'
+})
 
 const player = new Fighter({
     position: {x: 0, y: 0},
@@ -52,6 +58,7 @@ function animate() {
     ct.fillStyle = 'black'
     ct.fillRect(0, 0, canvas.width, canvas.height)
     background.update()
+    shop.update()
     player.update()
     enemy.update()
 
