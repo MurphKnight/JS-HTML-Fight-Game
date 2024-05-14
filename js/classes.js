@@ -1,7 +1,7 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 class Sprite {
     // The order in which the parameters are given doesn't matter 
-    constructor({position, imageSrc, scale = 1, framesMax = 1}) {
+    constructor({position, imageSrc, scale=1, framesMax=1, frameCurrent=0, frameElapsed=0, frameHold=6, offset={x:0, y:0} }) {
         this.position = position
         this.height = 150
         this.width = 50
@@ -9,9 +9,10 @@ class Sprite {
         this.image.src = imageSrc
         this.scale = scale
         this.framesMax = framesMax
-        this.frameCurrent = 0
-        this.frameElapsed = 0
-        this.frameHold = 6
+        this.frameCurrent = frameCurrent
+        this.frameElapsed = frameElapsed
+        this.frameHold = frameHold
+        this.offset = offset
     }
 
     draw() {
@@ -21,14 +22,13 @@ class Sprite {
             this.image.width / this.framesMax, // End of crop (X position)
             this.image.height, // End of crop (X position)
 
-            this.position.x, // X position of image
-            this.position.y, // Y position of image
+            this.position.x - this.offset.x, // X position of image
+            this.position.y - this.offset.y, // Y position of image
             (this.image.width / this.framesMax) * this.scale, // image width
             this.image.height*this.scale) // image height
     }
 
-    update(){
-        this.draw()
+    animateFrames(){
         this.frameElapsed++
 
         if (this.frameElapsed % this.frameHold === 0) 
@@ -39,12 +39,29 @@ class Sprite {
         }
     }
 
+    update(){
+        this.draw()
+        this.animateFrames()
+    }
+
 } // end of Sprite class
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-class Fighter {
+class Fighter extends Sprite {
     // The order in which the parameters are given doesn't matter 
-    constructor({position, velocity, color = 'Red', type = 'enemy', offset}) {
-        this.position = position
+    constructor({position, velocity, color = 'Red', type = 'enemy',
+                imageSrc, scale = 1, framesMax = 1, frameCurrent = 0, frameElapsed = 0, frameHold = 6, offset={x:0, y:0}}) {
+        
+        super({
+            position,
+            imageSrc,
+            scale,
+            framesMax,
+            frameCurrent,
+            frameElapsed,
+            frameHold,
+            offset
+        })
+
         this.velocity = velocity
 
         this.height = 150
@@ -66,10 +83,12 @@ class Fighter {
         this.health = 100
     }
 
+    
     draw() {
+        super.draw()
         // player box
-        ct.fillStyle = this.color
-        ct.fillRect(this.position.x, this.position.y, this.width, this.height)
+        //ct.fillStyle = this.color
+        //ct.fillRect(this.position.x, this.position.y, this.width, this.height)
 
         // attack box for player
         if (this.isAttacking && this.type == 'player'){
@@ -86,6 +105,8 @@ class Fighter {
 
     update(){
         this.draw()
+        this.animateFrames()
+
         this.position.x += this.velocity.x
         this.position.y += this.velocity.y
 
