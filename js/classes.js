@@ -48,7 +48,7 @@ class Sprite {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 class Fighter extends Sprite {
     // The order in which the parameters are given doesn't matter 
-    constructor({position, velocity, color = 'Red', type = 'enemy',
+    constructor({position, velocity, color = 'Red', type = 'enemy', sprites, 
                 imageSrc, scale = 1, framesMax = 1, frameCurrent = 0, frameElapsed = 0, frameHold = 6, offset={x:0, y:0}}) {
         
         super({
@@ -81,6 +81,13 @@ class Fighter extends Sprite {
         this.color = color
         this.isAttacking
         this.health = 100
+        this.sprites = sprites
+
+        for (const spri in this.sprites){
+            sprites[spri].image = new Image()
+            sprites[spri].image.src = sprites[spri].imageSrc
+        }
+        console.log(this.sprites)
     }
 
     
@@ -113,8 +120,10 @@ class Fighter extends Sprite {
         this.attackBox.position.x = this.position.x + this.attackBox.offset.x
         this.attackBox.position.y = this.position.y
 
+        // gravity function
         if (this.position.y + this.height + this.velocity.y >= canvas.height - 95){
             this.velocity.y = 0    
+            this.position.y = 331.28
         } 
         else
             this.velocity.y += gravity
@@ -125,6 +134,41 @@ class Fighter extends Sprite {
         setTimeout(() => {
             this.isAttacking = false
         }, 100)
+    }
+
+    switchSprite(spri){
+        switch (spri) {
+            case 'idle':
+                if (this.image != this.sprites.idle.image){
+                    this.image = this.sprites.idle.image
+                    this.framesMax = this.sprites.idle.framesMax
+                    super.frameCurrent = 0
+                }
+                break;
+            case 'run':
+                if (this.image != this.sprites.run.image){
+                    this.image = this.sprites.run.image
+                    this.framesMax = this.sprites.run.framesMax
+                    super.frameCurrent = 0
+                }
+                break;
+            case 'jump':
+                if (this.image != this.sprites.jump.image){
+                    this.image = this.sprites.jump.image
+                    this.framesMax = this.sprites.jump.framesMax
+                    super.frameCurrent = 0
+                }
+                break;
+            case 'fall':
+                if (this.image != this.sprites.fall.image){
+                    this.image = this.sprites.fall.image
+                    this.framesMax = this.sprites.fall.framesMax
+                    super.frameCurrent = 0
+                }
+                break;
+            default:
+                break;
+        }
     }
 } // end of Fighter class
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
